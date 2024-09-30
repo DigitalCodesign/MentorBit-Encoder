@@ -1,0 +1,12 @@
+MentorBitEncoder KEYWORD1
+obtenerPosicion KEYWORD2
+leerPulsador KEYWORD2
+configurarLeds KEYWORD2
+encenderLed KEYWORD2
+configurarEncoder KEYWORD2
+cambiarDireccionI2c KEYWORD2
+apagados LITERAL1
+encendidos LITERAL1
+individual LITERAL1
+acotado LITERAL1
+sin_acotar LITERAL1
