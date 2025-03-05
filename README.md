@@ -1,106 +1,67 @@
+# MentorBitEncoder
 
-# MentorBit-Encoder
-Esta librería está diseñada para el uso del módulo encoder con MentorBit, permitiendo la comunicación a través de I2C para leer la posición del encoder, controlar los LEDs y gestionar el pulsador.
+Librería para el control de un encoder rotatorio con pulsador y LEDs integrados en módulos compatibles con MentorBit.
 
-Puedes encontrar más material educativo sobre electrónica y robótica en nuestra tienda oficial: [https://digitalcodesign.com/shop](https://digitalcodesign.com/shop)
+## Descripción
 
-# Modo de Empleo
+La librería `MentorBitEncoder` facilita el control de encoders rotatorios con pulsador y LEDs integrados en módulos compatibles con MentorBit. Permite leer la posición del encoder, detectar pulsaciones del botón, controlar los LEDs integrados y configurar el modo de funcionamiento del encoder. La comunicación se realiza mediante I2C, lo que simplifica la conexión y el uso del módulo.
 
-Para utilizar esta librería, primero debes incluir el archivo `MentorBitEncoder.h` en tu sketch de Arduino:
+## Modo de Empleo
 
-```cpp
-#include <MentorBitEncoder.h>
-```
+1.  **Instalación:**
+    * Abre el IDE compatible con MentorBit.
+    * Ve a "Herramientas" -> "Gestionar librerías..."
+    * Busca "MentorBitEncoder" e instálala.
+
+2.  **Ejemplo básico:**
+
+    ```c++
+    #include <MentorBitEncoder.h>
+
+    MentorBitEncoder encoder;
+
+    void setup() {
+      Serial.begin(9600);
+      encoder.configurarEncoder(encoder.acotado); // Modo acotado (0-16)
+      encoder.configurarLeds(encoder.encendidos); // LEDs encendidos automáticamente
+    }
+
+    void loop() {
+      uint16_t posicion = encoder.obtenerPosicion();
+      bool pulsado = encoder.leerPulsador();
+
+      Serial.print("Posicion: ");
+      Serial.print(posicion);
+      Serial.print(" - Pulsador: ");
+      Serial.println(pulsado);
+
+      delay(100);
+    }
+    ```
+
+## Constructor y Métodos Públicos
 
 ### Constructor
 
-El constructor del objeto `MentorBitEncoder` permite configurar la dirección I2C del módulo. Si no se especifica una dirección, se usará la predeterminada 0x1A.
+* `MentorBitEncoder(uint8_t i2c_addr = 0x1A)`: Crea un objeto `MentorBitEncoder`.
+    * `i2c_addr`: Dirección I2C del encoder. El valor predeterminado es `0x1A`.
 
-```cpp
-MentorBitEncoder encoder(PIN_I2C);
-```
+### Métodos
 
-Donde:
-- `PIN_I2C` es la dirección I2C del dispositivo (por defecto 0x1A).
+* `uint16_t obtenerPosicion()`: Obtiene la posición actual del encoder.
+* `bool leerPulsador()`: Lee el estado del pulsador y lo resetea. Devuelve `true` si se ha pulsado, `false` en caso contrario.
+* `void configurarLeds(uint8_t modoleds)`: Configura el modo de los LEDs integrados.
+    * `modoleds`: Puede ser `apagados`, `encendidos` o `individual`.
+* `void encenderLed(uint8_t numero_led)`: Enciende un LED individual. Deshabilita el encendido automático.
+    * `numero_led`: Número del LED a encender.
+* `void configurarEncoder(uint8_t modo_encoder)`: Configura el modo de funcionamiento del encoder.
+    * `modo_encoder`: Puede ser `acotado` (0-16) o `sin_acotar` (0-255).
+* `void cambiarDireccionI2c(uint8_t i2c_addr)`: Cambia la dirección I2C del módulo.
 
-### Métodos Principales
+### Constantes Públicas
 
-#### `obtenerPosicion()`
-Obtiene la posición actual del encoder, devolviendo un valor de 16 bits.
-
-```cpp
-uint16_t posicion = encoder.obtenerPosicion();
-```
-
-- **Valor devuelto**: El valor de la posición del encoder (16 bits).
-
-#### `leerPulsador()`
-Lee el estado del pulsador, devolviendo `true` si ha sido presionado y `false` si no.
-
-```cpp
-bool pulsador = encoder.leerPulsador();
-```
-
-- **Valor devuelto**: `true` si el pulsador ha sido presionado, de lo contrario, `false`.
-
-#### `configurarLeds(uint8_t modoleds)`
-Configura los LEDs del módulo en tres modos diferentes:
-- `0`: LEDs apagados.
-- `1`: LEDs encendidos.
-- `2`: LEDs encendidos de forma individual.
-
-```cpp
-encoder.configurarLeds(encoder.encendidos);
-```
-
-- **Parámetros**: 
-  - `encoder.apagados`: Desactiva los LEDs.
-  - `encoder.encendidos`: Activa todos los LEDs.
-  - `encoder.individual`: Activa los LEDs de forma individual.
-
-#### `encenderLed(uint8_t numero_led)`
-Enciende un LED específico en el módulo. Solo puede encenderse un LED a la vez, y al encender uno, se desactiva el encendido automático.
-
-```cpp
-encoder.encenderLed(1);
-```
-
-- **Parámetros**: 
-  - `numero_led`: El número del LED a encender.
-
-#### `configurarEncoder(uint8_t modo_encoder)`
-Configura el funcionamiento del encoder. Los dos modos disponibles son:
-- **Modo acotado**: Funciona entre los valores 0 y 16, con LEDs dispuestos en forma circular.
-- **Modo sin acotar**: Funciona entre 0 y 255, permitiendo saltos entre estos valores.
-
-```cpp
-encoder.configurarEncoder(encoder.acotado);
-```
-
-- **Parámetros**: 
-  - `encoder.acotado`: Modo acotado entre 0 y 16.
-  - `encoder.sin_acotar`: Modo sin acotar entre 0 y 255.
-
-#### `cambiarDireccionI2c(uint8_t i2c_addr)`
-Cambia la dirección I2C del módulo, y este cambio se mantiene incluso si se desconecta la alimentación.
-
-```cpp
-encoder.cambiarDireccionI2c(0x2A);
-```
-
-- **Parámetros**: 
-  - `i2c_addr`: La nueva dirección I2C a configurar.
-
-# Atributos
-
-### Atributos Comunes para la Configuración de LEDs
-
-- `const uint8_t apagados`: Apaga los LEDs.
-- `const uint8_t encendidos`: Enciende todos los LEDs.
-- `const uint8_t individual`: Enciende los LEDs de forma individual.
-
-### Atributos para el Modo del Encoder
-
-- `const bool acotado`: Modo acotado, valores entre 0 y 16.
-- `const bool sin_acotar`: Modo sin acotar, valores entre 0 y 255.
-
+* `const uint8_t apagados = 0`: Modo de LEDs apagados.
+* `const uint8_t encendidos = 1`: Modo de LEDs encendidos automáticamente.
+* `const uint8_t individual = 2`: Modo de control individual de LEDs.
+* `const bool acotado = 1`: Modo de encoder acotado (0-16).
+* `const bool sin_acotar = 0`: Modo de encoder sin acotar (0-255).
