@@ -57,20 +57,33 @@ class MentorBitEncoder
     
     uint16_t obtenerPosicion();
     bool leerPulsador();
-    void configurarLeds(uint8_t modoleds);
-    void encenderLed(uint8_t numero_led);
+    void encenderLed(uint8_t numero_led, bool estado_led);
     void configurarEncoder(uint8_t modo_encoder);
     void cambiarDireccionI2c(uint8_t i2c_addr);
 
-    const uint8_t apagados = 0;
-    const uint8_t encendidos = 1;
-    const uint8_t individual = 2;
-    const bool acotado = 1;
-    const bool sin_acotar = 0;
+    const uint8_t apagar = 0;
+    const uint8_t encender = 1;
+    const uint8_t multiplexados = 2;
+    const uint8_t individual = 3;
+    const uint8_t leds_linked = 4;
+    const uint8_t leds_libres = 5;
+    const uint8_t cuenta_acotada = 6;
+    const uint8_t cuenta_sin_acotar = 7;
 
   private:
 
     uint8_t _i2c_addr;
+    uint8_t _turn_off = 0x60;
+    uint8_t _turn_on = 0x61;
+    uint8_t _led_multiplexed = 0x62;
+    uint8_t _led_individual = 0x63;
+    uint8_t _led_count_restricted = 0x64;
+    uint8_t _led_count_free = 0x65;
+    uint8_t _count_restricted = 0x66;
+    uint8_t _count_free = 0x67;
+    uint8_t _led_selection = 0x68;
+    uint8_t _led_selected_on = 0x69;
+    uint8_t _led_selection_off = 0x70;
 
 };
 

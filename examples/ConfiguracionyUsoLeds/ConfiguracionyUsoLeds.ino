@@ -44,17 +44,14 @@ void setup() {
   */
   // Tambien se pueden encender los leds de forma individual 
   for(int i=0;i<17;i++){
-    encoder.encenderLed(i);
+    encoder.encenderLed(i,1);
     delay(50);
   }
   for(int i=16;i>0;i--){
-    encoder.encenderLed(i);
+    encoder.encenderLed(i,0);
     delay(50);
   }
-  /*
-    Solo se puede encender un led, por lo que si se enciende otro
-    el primero se apagara
-  */
+
 }
 
 void loop() {
@@ -62,7 +59,7 @@ void loop() {
   encoder.configurarLeds(encoder.individual);
   delay(2000);
   // Se configuran los leds en modo multiplexado
-  encoder.configurarLeds(encoder.encendidos);
+  encoder.configurarLeds(encoder.multiplexados);
   delay(2000);
   // Se configuran los leds en modo apagado
   encoder.configurarLeds(encoder.apagados);

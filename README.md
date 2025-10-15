@@ -29,8 +29,10 @@ La librería **MentorBit-Encoder** te permite:
     - Sin acotar: No hay limite superior ni inferior y la cuenta puede saltar entre los valores mínimo y máximo (255)
 - Cambiar el modo de funcionamiento de los leds entre:
     - Apagador: apaga todos los leds del módulo
-    - encendidos: en modo acotado, enciende todos los leds inferiores hasta la cuenta actual
-    - individual: mantiene todos los leds apagados y solamente enciende el led que está en la posición de la cuenta
+    - encendidos: enciende los leds en el modo configurado previamente
+    - multiplexados: los leds se encienden en modo multiplexados
+    - individual: los les se encienden de forma individual
+    - libre: Se puede encender y apagar cualquier led 
 
 Todo con funciones simples para facilitar la integración en tus proyectos.
 
@@ -94,9 +96,6 @@ void loop() {
 - `uint16_t obtenerPosicion()`  
   Devuelve el valor de la cuenta actual del módulo.
 
-- `void configurarLeds(uint8_t modoleds)`  
-  Configura la forma de encenderse de los leds del módulo.
-
 - `void encenderLed(uint8_t numero_led)`  
   Enciende un led de forma individual, independientemente de la cuenta del encoder.
 
@@ -110,20 +109,29 @@ void loop() {
 
 ## Atributos Principales (clase encoder)
 
-- `encoder.apagados`  
-  Devuelve el valor de la cuenta actual del módulo.
+- `encoder.apagar`  
+  Apaga todos los leds del módulo.
 
-- `encoder.encendidos`  
-  Configura la forma de encenderse de los leds del módulo.
+- `encoder.encdender`  
+  Enciende los leds del módulo en el anterior modo de funcionamiento.
+
+- `encoder.multiplexados`  
+  Los leds se encienden multiplexados.
 
 - `encoder.individual`  
-  Enciende un led de forma individual, independientemente de la cuenta del encoder.
+  los leds se encienden individualmente.
 
-- `encoder.acotado`  
-  Configura el modo de funcionamiento del módulo de encoder a acotado.
+- `encoder.leds_linked`  
+  El funcionamiento de los leds esta asociado a la cuenta del encoder.
 
-- `encoder.sin_acotar`  
-  Configura el modo de funcionamiento del módulo de encoder a sin acotar.
+- `encoder.leds_libres`  
+  El funcionamiento de los leds lo define el usuario.
+
+- `encoder.cuenta_acotada`  
+  La cuenta del encoder esta acotada entre 0 y 16.
+
+- `encoder.cuenta_sin_acotar`  
+  La cuenta del encoder puede toimar cualquier valor entre 0 y 255. Se permite el salto entre 0 y 255, al igualñ que el caso contrario
 
 ---
 

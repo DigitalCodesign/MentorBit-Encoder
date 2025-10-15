@@ -51,7 +51,7 @@
     
     En caso de no darse, se tomara por defecto la dirección 0x1A
 */
-MentorBitEncoder::MentorBitEncoder(uint8_t i2c_addr = 0x1A){
+MentorBitEncoder::MentorBitEncoder(uint8_t i2c_addr){
     Wire.begin();
     _i2c_addr = i2c_addr;
 }
@@ -60,7 +60,7 @@ MentorBitEncoder::MentorBitEncoder(uint8_t i2c_addr = 0x1A){
     Función que obtiene el valor de la posicion marcada por el encoder
 */
 uint16_t MentorBitEncoder::obtenerPosicion(){
-    Wire.requestFrom(_i2c_addr, 2);
+    Wire.requestFrom((uint8_t)_i2c_addr, 2);
     uint16_t posicion_encoder = Wire.read();
     posicion_encoder |= (Wire.read() << 8);
     posicion_encoder &= 0b0111111111111111;
@@ -71,7 +71,7 @@ Funcion que devuelve unvalor de true o false en funcion de si se ha pulsado
 o no el pulsador con anterioridad. Tambien resetea el estado
 */
 bool MentorBitEncoder::leerPulsador(){
-    Wire.requestFrom(_i2c_addr, 2);
+    Wire.requestFrom((uint8_t)_i2c_addr, 2);
     uint16_t posicion_encoder = Wire.read();
     posicion_encoder |= (Wire.read() << 8);
     posicion_encoder &= 0b1000000000000000;
@@ -89,33 +89,22 @@ bool MentorBitEncoder::leerPulsador(){
 }
 
 /*
-    Función que permite habilitar o deshabilitar los leds del módulo
-*/
-void MentorBitEncoder::configurarLeds(uint8_t modoleds){
-    Wire.beginTransmission(_i2c_addr);
-    if(modoleds==0){
-        Wire.write(0x60);
-    }
-    else if(modoleds==1){
-        Wire.write(0x61);
-    }
-    else if(modoleds==2){
-        Wire.write(0x62);
-    }
-    Wire.endTransmission();
-}
-
-/*
     Esta función permite encender un solo led de los disponibles en el módulo
 
     Al encender un led, se deshabilita el encendido automatico de los leds. No 
     se puede encender mas de un led a la vez, en caso de encender dos, se mantendrá
     ecendido el último led indicado
 */
-void MentorBitEncoder::encenderLed(uint8_t numero_led){
+void MentorBitEncoder::encenderLed(uint8_t numero_led, bool estado_led){
     Wire.beginTransmission(_i2c_addr);
-    Wire.write(0x25);
+    Wire.write(_led_selection);
     Wire.write(numero_led);
+    if(estado_led == true){
+        Wire.write(_led_selected_on);
+    }
+    else{
+        Wire.write(_led_selection_off);
+    }
     Wire.endTransmission();
 }
 
@@ -127,13 +116,33 @@ void MentorBitEncoder::encenderLed(uint8_t numero_led){
     funciona entre 0 y 255, permitiendo el salto entre estos dos cuando se alkcanzan los valores
     inferior y superior.
 */
-void MentorBitEncoder::configurarEncoder(uint8_t modo_encoder){
+void MentorBitEncoder::configurarEncoder(uint8_t modo_funcionamiento){
     Wire.beginTransmission(_i2c_addr);
-    if(modo_encoder==1){
-        Wire.write(0x63);
-    }
-    else if(modo_encoder==0){
-        Wire.write(0x64);
+    switch(modo_funcionamiento){
+        case(0):
+            Wire.write(_turn_off);
+            break;
+        case(1):
+            Wire.write(_turn_on);
+            break;
+        case(2):
+            Wire.write(_led_multiplexed);
+            break;
+        case(3):
+            Wire.write(_led_individual);
+            break;
+        case(4):
+            Wire.write(_led_count_restricted);
+            break;
+        case(5):
+            Wire.write(_led_count_free);
+            break;
+        case(6):
+            Wire.write(_count_restricted);
+            break;
+        case(7):
+            Wire.write(_count_free);
+            break;
     }
     Wire.endTransmission();
 }

@@ -38,7 +38,7 @@ void setup() {
   // Inicializamos el bus serial a una velocidad de 9600 baudios
   Serial.begin(9600);
   // Configuramos el encoder para eliminar los limites inferior y superior
-  encoder.configurarEncoder(encoder.sin_acotar); //encoder.acotado para funcionamiento por defecto
+  encoder.configurarEncoder(encoder.cuenta_sin_acotar); //encoder.acotado para funcionamiento por defecto
   /*
     Al desactivar el limite superior se desactiva el encendido de los leds
     Si se activa el encendido de los leds se desactivara el modo sin limite.
